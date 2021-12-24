@@ -8,3 +8,6 @@ MediaSession多媒体框架demo源码，可将源码中根目录/music这个资�
 #### 参与贡献
 1. 在此非常感谢原作者：https://gitee.com/xuxudongyang/media-session-practice
 
+### 注意
+经过测试android8.0及以上service无法启动直接启动后自己就destory了，原因后续排查
+
