@@ -3,6 +3,7 @@ MediaSession多媒体框架demo源码，可将源码中根目录/music这个资�
 - 本项目基于别人开源的一个项目，在此基础上增加音乐列表
 - 增加点击歌曲列表任意歌曲进行播放
 - 上下一首和点击歌曲列表可切换播放
+- 更新了图片位置
 
 #### 参与贡献
 1. 在此非常感谢原作者：https://gitee.com/xuxudongyang/media-session-practice
