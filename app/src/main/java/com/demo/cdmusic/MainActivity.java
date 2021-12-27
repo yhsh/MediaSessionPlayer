@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 //点击了哪首开始播放哪首
                 Bundle bundle = new Bundle();
                 bundle.putInt("song", position);
+                MusicLib.getInstance().setCurrent(position);
                 MediaMetadataCompat mediaMetadataCompat = MusicLib.getInstance().musicList.get(position);
                 String path = mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
                 String title = mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
