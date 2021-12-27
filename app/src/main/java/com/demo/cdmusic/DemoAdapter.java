@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -18,9 +19,9 @@ import java.util.List;
 public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
 
 
-    private List<String> musicList;
+    private final List<String> musicList;
 
-    private Context context;
+    private final Context context;
 
     public DemoAdapter(Context context, List<String> musicList) {
         this.musicList = musicList;
@@ -39,7 +40,7 @@ public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DemoAdapter.ViewHolder holder, int position) {
         String name = musicList.get(position);
-        holder.textView.setText(name);
+        holder.textView.setText(MessageFormat.format("{0}.{1}", position + 1, name));
         holder.itemView.setOnClickListener(v -> musicItemOnclickListener.selectPosition(position));
     }
 
@@ -48,9 +49,9 @@ public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
         return this.musicList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        private final TextView textView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

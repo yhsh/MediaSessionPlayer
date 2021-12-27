@@ -466,12 +466,19 @@ public class MusicService extends MediaBrowserServiceCompat {
     // 扫描音乐信息
     private void scanMusic() {
         Log.d(TAG, "scanMusic: 开始扫描");
-        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+        Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media.DISPLAY_NAME,
+                        MediaStore.Audio.Media.TITLE,
+                        MediaStore.Audio.Media._ID,
+                        MediaStore.Audio.Media.ALBUM,
+                        MediaStore.Audio.Media.ARTIST,
+                        MediaStore.Audio.Media.DURATION,
+                        MediaStore.Audio.Media.DATA}, null, null, null);
         if (cursor.moveToFirst()) {
             while (!cursor.isAfterLast()) {
                 String display_name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
                 // 如果不是mp3文件则跳过
-                if (!display_name.endsWith("mp3") && !display_name.endsWith("m4a")) {
+                if (!display_name.endsWith("mp3") && !display_name.endsWith("m4a") && !display_name.endsWith("aac")) {
                     Log.d(TAG, "scanMusic: " + display_name);
                     cursor.moveToNext();
                     continue;
@@ -484,18 +491,18 @@ public class MusicService extends MediaBrowserServiceCompat {
                 int duration = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.DURATION));
                 String path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
 
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+//                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
                 //获取专辑封面
-                try {
-                    mediaMetadataRetriever.setDataSource(path);
-                } catch (Exception e) {
-                    Log.d(TAG, "scanMusic: 封面路径不存在");
-                }
-                Bitmap bp = null;
-                byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
-                if (picture != null) {
-                    bp = BitmapFactory.decodeByteArray(picture, 0, picture.length);
-                }
+//                try {
+//                    mediaMetadataRetriever.setDataSource(path);
+//                } catch (Exception e) {
+//                    Log.d(TAG, "scanMusic: 封面路径不存在");
+//                }
+//                Bitmap bp = null;
+//                byte[] picture = mediaMetadataRetriever.getEmbeddedPicture();
+//                if (picture != null) {
+//                    bp = BitmapFactory.decodeByteArray(picture, 0, picture.length);
+//                }
 
                 MediaMetadataCompat metadata = new MediaMetadataCompat.Builder()
                         .putString(MediaMetadataCompat.METADATA_KEY_TITLE, name)
@@ -505,7 +512,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         .putString(MediaMetadataCompat.METADATA_KEY_ART_URI, path)
                         .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                         .putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_TITLE, display_name)
-                        .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, bp)
+//                        .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, bp)
                         .build();
 
                 mMusicLib.add(metadata);

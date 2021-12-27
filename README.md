@@ -4,10 +4,11 @@ MediaSession多媒体框架demo源码，可将源码中根目录/music这个资�
 - 增加点击歌曲列表任意歌曲进行播放
 - 上下一首和点击歌曲列表可切换播放
 - 更新了图片位置
+- 修复android8.0扫描歌曲失败以及无法播放的问题
 
 #### 参与贡献
 1. 在此非常感谢原作者：https://gitee.com/xuxudongyang/media-session-practice
 
 ### 注意
-经过测试android8.0及以上service无法启动直接启动后自己就destory了，原因后续排查
+经过测试android8.0及以上扫描歌曲有问题后续修复
 
