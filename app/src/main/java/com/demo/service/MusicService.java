@@ -4,10 +4,7 @@ package com.demo.service;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -171,7 +168,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                         mMediaPlayer.reset();
                         mMediaPlayer.setDataSource(path);
                         // 先申请音频焦点
-                        if (!requetFocus()) {
+                        if (!requestFocus()) {
                             mediaStateBeforeRequestAudio = CurrentMusic.REQUESTFOCUS;
                             Log.d(TAG, "焦点被占用");
                             // 跳转到下一首，但是不能播放
@@ -211,7 +208,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                     mMediaPlayer.reset();
                     mMediaPlayer.setDataSource(path);
                     // 先申请音频焦点
-                    if (!requetFocus()) {
+                    if (!requestFocus()) {
                         mediaStateBeforeRequestAudio = CurrentMusic.REQUESTFOCUS;
                         Log.d(TAG, "焦点被占用");
                         // 跳转到下一首，但是不能播放
@@ -243,7 +240,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             public void onSeekTo(long pos) {
                 super.onSeekTo(pos);
                 // 如果没有申请到焦点，能跳转到对应位置，但是不能播放
-                if (!requetFocus()) {
+                if (!requestFocus()) {
                     mMediaPlayer.seekTo((int) pos);
                     mPlaybackState = new PlaybackStateCompat.Builder()
                             .setState(PlaybackStateCompat.STATE_PAUSED, pos, 1.0f)
@@ -263,7 +260,7 @@ public class MusicService extends MediaBrowserServiceCompat {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onPlay() {
-                if (mPlaybackState.getState() == PlaybackStateCompat.STATE_NONE && requetFocus()) {
+                if (mPlaybackState.getState() == PlaybackStateCompat.STATE_NONE && requestFocus()) {
                     try {
                         MediaMetadataCompat first = mMusicLib.getCurrent();
                         if (first == null) {
@@ -285,7 +282,7 @@ public class MusicService extends MediaBrowserServiceCompat {
                 }
                 // 如果当前处于暂停状态，那么播放它,客户端通过调用play会到达这里
                 if (mPlaybackState.getState() == PlaybackStateCompat.STATE_PAUSED) {
-                    if (requetFocus()) {
+                    if (requestFocus()) {
                         Log.d(TAG, "onPlay: 将处于暂停状态的音乐开始播放");
                         mMediaPlayer.start();
                         mPlaybackState = new PlaybackStateCompat.Builder()
@@ -527,7 +524,7 @@ public class MusicService extends MediaBrowserServiceCompat {
     }
 
     // 申请Audio焦点
-    private boolean requetFocus() {
+    private boolean requestFocus() {
         int result = audioManager.requestAudioFocus(audioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
     }
