@@ -139,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 bundle.putInt("song", position);
                 MusicLib.getInstance().setCurrent(position);
+                adapter.updateCurrentMusic();
+                rvMusicList.scrollToPosition(position);
                 MediaMetadataCompat mediaMetadataCompat = MusicLib.getInstance().musicList.get(position);
                 String path = mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
                 String title = mediaMetadataCompat.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
@@ -256,10 +258,15 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 currentMusicInfo.setCurrentMedia(metadata);
-
-                Log.d(TAG, "onMetadataChanged: name: " + metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
-
-                textTitle.setText(metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE));
+                String musicName = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
+                Log.d(TAG, "onMetadataChanged: name: " + musicName);
+                adapter.updateCurrentMusic(musicName);
+                for (int i = 0; i < musicList.size(); i++) {
+                    if (musicList.get(i).contains(musicName)) {
+                        rvMusicList.scrollToPosition(i);
+                    }
+                }
+                textTitle.setText(musicName);
                 if (metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON) != null) {
                     imageView.setImageBitmap(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON));
                 }

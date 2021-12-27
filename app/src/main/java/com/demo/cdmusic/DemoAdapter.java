@@ -1,6 +1,7 @@
 package com.demo.cdmusic;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.demo.data.MusicLib;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -22,6 +25,7 @@ public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
     private final List<String> musicList;
 
     private final Context context;
+    private int currentPosition = -1;
 
     public DemoAdapter(Context context, List<String> musicList) {
         this.musicList = musicList;
@@ -40,6 +44,7 @@ public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull DemoAdapter.ViewHolder holder, int position) {
         String name = musicList.get(position);
+        holder.textView.setTextColor(currentPosition == position ? Color.RED : Color.BLACK);
         holder.textView.setText(MessageFormat.format("{0}.{1}", position + 1, name));
         holder.itemView.setOnClickListener(v -> musicItemOnclickListener.selectPosition(position));
     }
@@ -72,5 +77,27 @@ public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
 
     public void setMusicItemOnclickListener(MusicItemOnclickListener musicItemOnclickListener) {
         this.musicItemOnclickListener = musicItemOnclickListener;
+    }
+
+    /**
+     * 通过歌曲名称更新当前播放的歌曲
+     *
+     * @param musicName 歌曲名字
+     */
+    public void updateCurrentMusic(String musicName) {
+        for (int i = 0; i < musicList.size(); i++) {
+            if (musicList.get(i).contains(musicName)) {
+                currentPosition = i;
+                notifyDataSetChanged();
+            }
+        }
+    }
+
+    /**
+     * 通过当前position位置更新当前歌曲
+     */
+    public void updateCurrentMusic() {
+        currentPosition = MusicLib.getInstance().current;
+        notifyDataSetChanged();
     }
 }
